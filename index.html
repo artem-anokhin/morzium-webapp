@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Клуб MORZIUM</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff;--gray:#f1f2f4;--ink:#111;--muted:#6e7076;--blue:#1565d8;--red:#e2483c;--r:24px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:500 15px/1.45 Montserrat,system-ui,sans-serif;padding:0 16px 96px;max-width:560px;margin:0 auto}
+img{display:block;max-width:100%}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 0 10px;position:sticky;top:0;background:var(--bg);z-index:5}
+header img{height:22px}
+.pill{background:var(--ink);color:#fff;border-radius:10px;padding:8px 12px;font-weight:600;font-size:13px;text-decoration:none}
+h1,h2{font-weight:900;text-transform:uppercase;line-height:1.08;letter-spacing:-.01em}
+h1{font-size:28px}h2{font-size:22px;margin-bottom:12px}
+.lbl{color:var(--blue);font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.card{background:var(--gray);border-radius:var(--r);padding:20px;margin-top:14px;overflow:hidden}
+.muted{color:var(--muted)}
+.hero .ph{background:#d9d9d9;border-radius:18px;margin:14px -4px 0;overflow:hidden}
+.old{font-size:26px;font-weight:800;color:var(--muted);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:3px}
+.new{font-size:56px;font-weight:900;color:var(--blue);line-height:1}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font:700 16px Montserrat,sans-serif;cursor:pointer;text-align:center;text-decoration:none}
+.btn-blue{background:var(--blue);color:#fff}.btn-dark{background:var(--ink);color:#fff}
+.btn-light{background:#fff;color:var(--ink)}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.chip{background:#fff;border-radius:12px;padding:12px 8px;text-align:center;font-weight:800}
+.split{display:grid;grid-template-columns:1fr 120px;gap:14px;align-items:end}
+.split img{border-radius:16px}
+.blue{background:var(--blue);color:#fff}.blue .muted{color:#cfe0fb}
+.calc input{width:100%;accent-color:var(--blue);margin:14px 0 6px}
+.calc .big{font-size:40px;font-weight:900;color:var(--blue)}
+.feat{display:grid;gap:10px;margin-top:12px}
+.feat div{background:#fff;border-radius:16px;padding:14px 16px}
+.feat b{display:block;text-transform:uppercase;font-weight:800;font-size:14px;margin-bottom:2px}
+.strip{display:flex;gap:10px;overflow-x:auto;margin:14px -20px -4px;padding:0 20px 4px;scrollbar-width:none}
+.strip img{height:110px;border-radius:14px;flex:none}
+.clubcard{border-radius:18px;margin:4px 0 14px}
+.plans{display:grid;gap:10px}
+.plan{display:flex;justify-content:space-between;align-items:center;background:#fff;border:2px solid transparent;border-radius:16px;padding:16px;cursor:pointer}
+.plan.on{border-color:var(--blue)}
+.plan b{font-size:18px;font-weight:900}.plan span{font-size:13px;color:var(--muted)}
+.plan .p{font-size:20px;font-weight:900;color:var(--blue)}
+footer{display:flex;gap:10px;margin-top:14px}
+footer a{flex:1;background:var(--gray);border-radius:14px;padding:14px;text-align:center;color:var(--ink);text-decoration:none;font-weight:700}
+.fixed{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#fff 30%)}
+.fixed .btn{max-width:528px;margin:0 auto}
+.tg .fixed{display:none} /* в Telegram используем нативную MainButton */
+</style>
+</head>
+<body>
+<header><img src="img/logo.webp" alt="MORZIUM"><a class="pill" href="#tariffs">Клуб MORZIUM</a></header>
+
+<section class="card hero">
+  <div class="lbl" id="pname">Магний L-треонат</div>
+  <div class="old"><span id="pmarket">1 093</span> ₽</div>
+  <div class="new"><span id="pclub">717</span> ₽</div>
+  <p class="muted" style="margin-top:6px">цена для членов клуба MORZIUM, <span id="pml">без клуба</span> — <span id="pm2">1 093</span> ₽</p>
+  <div class="ph"><img id="pimg" src="img/magnij.webp" alt=""></div>
+</section>
+
+<section class="card">
+  <div class="lbl">Как это возможно</div>
+  <div class="split">
+    <div><h2>Себестоимость вместо наценки x5–x7</h2>
+    <p class="muted">Обычно цена БАДа в 5–7 раз выше себестоимости: платишь за медийность бренда. В клубе продукция почти по себестоимости, наценка только на эквайринг, серверы и сайт.</p></div>
+    <img src="img/production.webp" alt="">
+  </div>
+</section>
+
+<section class="card blue">
+  <div class="lbl" style="color:#cfe0fb">Сервис</div>
+  <h2>Как на маркетплейсах, но дешевле</h2>
+  <p class="muted">Оплата на сайте, получение в пункте выдачи, сроки как на маркетплейсах.</p>
+  <div class="row" style="margin-top:14px"><div class="chip" style="color:var(--ink)">Ozon</div><div class="chip" style="color:var(--ink)">5Post</div><div class="chip" style="color:var(--ink)">СДЭК</div></div>
+  <img src="img/shelf.webp" alt="" style="margin-top:14px">
+</section>
+
+<section class="card calc">
+  <div class="lbl">Посчитай выгоду</div>
+  <h2>Сколько добавок ты принимаешь?</h2>
+  <input type="range" id="n" min="1" max="6" value="3">
+  <p class="muted"><b id="nlbl" style="color:var(--ink)">3 банки</b> в месяц по цене примера выше</p>
+  <div class="big" id="save">0 ₽</div>
+  <p class="muted">экономия в месяц до оплаты членства. Подписка окупается от 2,5 банок.</p>
+</section>
+
+<section class="card">
+  <div class="lbl">Бонусы клуба</div>
+  <h2>Больше, чем просто цены</h2>
+  <div class="feat">
+    <div><b>Закрытые статьи</b><span class="muted">от нутрициологов, гастроэнтерологов, эндокринологов</span></div>
+    <div><b>Эфиры</b><span class="muted">со специалистами клуба</span></div>
+    <div><b>Закрытые чаты</b><span class="muted">где можно задать вопросы врачам</span></div>
+  </div>
+  <div class="strip"><img src="img/article1.webp" alt=""><img src="img/article2.webp" alt=""></div>
+</section>
+
+<section class="card" id="tariffs">
+  <div class="lbl">Тарифы</div>
+  <h2>Вступить в клуб MORZIUM</h2>
+  <img class="clubcard" src="img/clubcard.webp" alt="Клубная карта">
+  <div class="plans">
+    <div class="plan" data-plan="month"><div><b>Месяц</b><br><span>оплата помесячно</span></div><div class="p"><span id="pm">XXX</span> ₽</div></div>
+    <div class="plan on" data-plan="year"><div><b>Год</b><br><span>выгоднее в пересчёте на месяц</span></div><div class="p"><span id="py">XXXX</span> ₽</div></div>
+  </div>
+</section>
+
+<footer><a id="ch" href="#">📣 Канал</a><a id="site" href="#">🌐 Сайт</a></footer>
+<div class="fixed"><a class="btn btn-blue" id="paybtn" href="#">Вступить в клуб</a></div>
+
+<script>
+// Параметры передаёт бот: ?n=&m=&c=&k=&pm=&py=&um=&uy=&ch=&site=
+const q = new URLSearchParams(location.search);
+const P = k => q.get(k);
+const set = (id, v) => { if (v) document.getElementById(id).textContent = v; };
+set('pname', P('n')); set('pmarket', P('m')); set('pclub', P('c')); set('pm', P('pm')); set('pml', P('ml')); set('pm2', P('m')); set('py', P('py'));
+const known = ['magnij', 'd3', 'q10', 'kurkumin'];
+document.getElementById('pimg').src = 'img/' + (known.includes(P('k')) ? P('k') : 'magnij') + '.webp';
+if (!known.includes(P('k')) && P('k')) document.getElementById('pimg').src = 'img/hero.webp';
+const safe = u => /^https:\/\//.test(u || '') ? u : null;
+const links = { month: safe(P('um')), year: safe(P('uy')) };
+const ch = safe(P('ch')), site = safe(P('site'));
+
+const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initData ? Telegram.WebApp : null;
+const open = u => { if (!u) return; tg ? tg.openLink(u) : (location.href = u); };
+document.getElementById('ch').onclick = e => { e.preventDefault(); ch && (tg && /t\.me\//.test(ch) ? tg.openTelegramLink(ch) : open(ch)); };
+document.getElementById('site').onclick = e => { e.preventDefault(); open(site); };
+
+// калькулятор
+const num = s => parseInt(String(s).replace(/\D/g, '')) || 0;
+const diff = Math.max(num(document.getElementById('pmarket').textContent) - num(document.getElementById('pclub').textContent), 0);
+const n = document.getElementById('n');
+const word = k => k === 1 ? 'банка' : k < 5 ? 'банки' : 'банок';
+const calc = () => {
+  const k = +n.value;
+  document.getElementById('nlbl').textContent = k + ' ' + word(k);
+  document.getElementById('save').textContent = '≈ ' + (k * diff).toLocaleString('ru-RU') + ' ₽';
+};
+n.oninput = () => { calc(); tg && tg.HapticFeedback.selectionChanged(); };
+calc();
+
+// выбор тарифа + кнопка оплаты
+let plan = 'year';
+const payText = () => `Вступить — ${document.getElementById(plan === 'year' ? 'py' : 'pm').textContent} ₽`;
+const refresh = () => {
+  document.querySelectorAll('.plan').forEach(el => el.classList.toggle('on', el.dataset.plan === plan));
+  document.getElementById('paybtn').textContent = payText();
+  if (tg) tg.MainButton.setText(payText());
+};
+document.querySelectorAll('.plan').forEach(el => el.onclick = () => { plan = el.dataset.plan; refresh(); tg && tg.HapticFeedback.impactOccurred('light'); });
+const pay = () => open(links[plan]);
+document.getElementById('paybtn').onclick = e => { e.preventDefault(); pay(); };
+
+if (tg) {
+  document.documentElement.classList.add('tg');
+  tg.ready(); tg.expand();
+  tg.setHeaderColor('#ffffff'); tg.setBackgroundColor('#ffffff');
+  tg.MainButton.setParams({ color: '#1565d8', text_color: '#ffffff' });
+  tg.MainButton.onClick(pay); tg.MainButton.show();
+}
+refresh();
+</script>
+</body>
+</html>
