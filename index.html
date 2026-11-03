@@ -39,6 +39,9 @@ h1{font-size:30px}h2{font-size:22px;margin-bottom:10px}
 
 /* price list */
 .list{display:grid;gap:8px;margin-top:6px}
+a.item{text-decoration:none;color:inherit}
+.item .go{display:block;font-size:11px;font-weight:600;color:var(--blue);margin-top:3px}
+.more{display:block;text-align:center;background:#fff;border-radius:14px;padding:13px;margin-top:8px;font-weight:800;color:var(--blue);text-decoration:none}
 .item{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;background:#fff;border-radius:16px;padding:10px 14px 10px 10px}
 .item img{width:48px;height:48px;object-fit:contain}
 .item .ph{width:48px;height:48px;border-radius:12px;background:var(--gray);display:grid;place-items:center;font-weight:900;color:var(--blue);font-size:13px}
@@ -153,6 +156,7 @@ footer a{flex:1;background:var(--gray);border-radius:14px;padding:14px;text-alig
   <div class="lbl">Клубные цены</div>
   <h2>Большинство банок <span style="white-space:nowrap">300–700 ₽</span></h2>
   <div class="list" id="list"></div>
+  <a class="more" href="https://morzium.com/catalog/" data-ext>Весь каталог на morzium.com →</a>
   <p class="note">Зачёркнута обычная цена на morzium.com, синим цена для участников клуба. Цены на 03.11.2026.</p>
 </section>
 
@@ -220,14 +224,15 @@ const DEF = {
   site: 'https://morzium.com/club/', ch: ''
 };
 // Каталог morzium.com: обычная цена → клубная (03.11.2026)
+const SITE = 'https://morzium.com';
 const CATALOG = [
-  ['Витамин D3 8000 МЕ', 561, 368, 'cut_d3'],
-  ['Витамин D3 5000 МЕ + K2', 458, 301, 'cut_d3k2'],
-  ['Цинк пиколинат 25 мг', 455, 298, 'cut_zinc'],
-  ['L-тирозин 1575 мг', 678, 445, 'cut_tirozin'],
-  ['Куркумин 150 мг', 801, 525, 'cut_kurkumin'],
-  ['Коэнзим Q10 100 мг', 906, 594, 'cut_q10'],
-  ['Магний L-треонат 2200 мг', 1093, 717, 'cut_magnij'],
+  ['Витамин D3 8000 МЕ', 561, 368, 'cut_d3', '/catalog/po-naznaceniu/dlya-kozhi-i-volos/vitamin-d3-8000-me/'],
+  ['Витамин D3 5000 МЕ + K2', 458, 301, 'cut_d3k2', '/catalog/po-naznaceniu/obshcheukreplyayushchee/vitamin-d3-k2-5000-me/'],
+  ['Цинк пиколинат 25 мг', 455, 298, 'cut_zinc', '/catalog/po-naznaceniu/obshcheukreplyayushchee/cink-pikolinat-125-mg-vitaminy-zink/'],
+  ['L-тирозин 1575 мг', 678, 445, 'cut_tirozin', '/catalog/po-naznaceniu/pohudenie/tirozin-1575-mg-l-tyrosine/'],
+  ['Куркумин 150 мг', 801, 525, 'cut_kurkumin', '/catalog/po-naznaceniu/obshcheukreplyayushchee/kurkumin-s-piperinom-bioperinom-v-kapsulah/'],
+  ['Коэнзим Q10 100 мг', 906, 594, 'cut_q10', '/catalog/po-naznaceniu/dlya-serdca-i-sosudov/koenzim-q10-100-mg/'],
+  ['Магний L-треонат 2200 мг', 1093, 717, 'cut_magnij', '/catalog/po-naznaceniu/vynoslivost-i-energiya/magnij-l-treonat-2200-mg-dla-mozga-pamati/'],
 ];
 const IMG = { zinc: 'cut_zinc', d3k2: 'cut_d3k2', d3: 'cut_d3', magnij: 'cut_magnij', q10: 'cut_q10', kurkumin: 'cut_kurkumin', tirozin: 'cut_tirozin' };
 
@@ -255,9 +260,9 @@ $('ratio').textContent = market > club && club ? '−' + Math.round((1 - club / 
 if (user && user.id) $('cardno').textContent = 'MRZ ' + String(user.id).padStart(8, '0').slice(-8).replace(/(\d{4})(\d{4})/, '$1 $2');
 
 // Список клубных цен
-$('list').innerHTML = CATALOG.map(([name, reg, cl, img]) =>
-  `<div class="item">${img ? `<img src="img/${img}.webp" alt="" loading="lazy">` : '<div class="ph">MRZ</div>'}` +
-  `<b>${name}</b><div class="pr"><s>${rub(reg)}</s><div>${rub(cl)}</div></div></div>`).join('');
+$('list').innerHTML = CATALOG.map(([name, reg, cl, img, path]) =>
+  `<a class="item" href="${SITE + path}" data-ext>${img ? `<img src="img/${img}.webp" alt="" loading="lazy">` : '<div class="ph">MRZ</div>'}` +
+  `<b>${name}<span class="go">Смотреть на сайте →</span></b><div class="pr"><s>${rub(reg)}</s><div>${rub(cl)}</div></div></a>`).join('');
 
 // Калькулятор
 const diff = Math.max(market - club, 0);
@@ -286,6 +291,8 @@ const withTags = (u, plan) => {
 };
 const links = { month: safe(P('um')), year: safe(P('uy')) };
 const open = u => { if (!u) return; tg ? tg.openLink(u) : (location.href = u); };
+const tagSite = u => { const x = new URL(u); x.searchParams.set('utm_source', 'telegram_webapp'); x.searchParams.set('utm_campaign', P('k') || 'direct'); return x.toString(); };
+document.querySelectorAll('a[data-ext]').forEach(a => { a.href = tagSite(a.href); a.onclick = e => { if (tg) { e.preventDefault(); tg.openLink(a.href); } }; });
 const site = safe(P('site'));
 $('site').href = site || DEF.site;
 $('site').onclick = e => { e.preventDefault(); open(site || DEF.site); };
