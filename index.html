@@ -175,6 +175,7 @@ footer svg{width:18px;height:18px;fill:none;stroke:var(--blue);stroke-width:2;st
 @media (prefers-reduced-motion:reduce){.reveal,.js .reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
 .ticks{padding:0}
 .ticks span{width:28px;text-align:center}
+.item .pr .src{display:block;font-style:normal;font-size:10.5px;font-weight:600;color:#8a8d93;margin-top:-2px}
 </style>
 </head>
 <body>
@@ -219,7 +220,7 @@ footer svg{width:18px;height:18px;fill:none;stroke:var(--blue);stroke-width:2;st
   <h2>Большинство банок <span style="white-space:nowrap">300–700 ₽</span></h2>
   <div class="list" id="list"></div>
   <a class="more" href="https://morzium.com/catalog/" data-ext>Весь каталог на morzium.com →</a>
-  <p class="note">Зачёркнута обычная цена на morzium.com, синим цена для участников клуба. Цены на 03.11.2026.</p>
+  <p class="note">Зачёркнута цена аналога известного бренда на WB (у коэнзима Q10 — обычная цена на morzium.com), синим цена для участников клуба. Цены на 03.11.2026.</p>
 </section>
 
 <!-- 5. Калькулятор -->
@@ -288,13 +289,14 @@ const DEF = {
 // Каталог morzium.com: обычная цена → клубная (03.11.2026)
 const SITE = 'https://morzium.com';
 const CATALOG = [
-  ['Витамин D3 8000 МЕ', 561, 368, 'cut_d3', '/catalog/po-naznaceniu/dlya-kozhi-i-volos/vitamin-d3-8000-me/'],
-  ['Витамин D3 5000 МЕ + K2', 458, 301, 'cut_d3k2', '/catalog/po-naznaceniu/obshcheukreplyayushchee/vitamin-d3-k2-5000-me/'],
-  ['Цинк пиколинат 25 мг', 455, 298, 'cut_zinc', '/catalog/po-naznaceniu/obshcheukreplyayushchee/cink-pikolinat-125-mg-vitaminy-zink/'],
-  ['L-тирозин 1575 мг', 678, 445, 'cut_tirozin', '/catalog/po-naznaceniu/pohudenie/tirozin-1575-mg-l-tyrosine/'],
-  ['Куркумин 150 мг', 801, 525, 'cut_kurkumin', '/catalog/po-naznaceniu/obshcheukreplyayushchee/kurkumin-s-piperinom-bioperinom-v-kapsulah/'],
-  ['Коэнзим Q10 100 мг', 906, 594, 'cut_q10', '/catalog/po-naznaceniu/dlya-serdca-i-sosudov/koenzim-q10-100-mg/'],
-  ['Магний L-треонат 2200 мг', 1093, 717, 'cut_magnij', '/catalog/po-naznaceniu/vynoslivost-i-energiya/magnij-l-treonat-2200-mg-dla-mozga-pamati/'],
+  // [название, цена-сравнение, клубная, картинка, страница на morzium.com, откуда цена-сравнение]
+  // Цены WB 03.11.2026: D3 — Solgar D3 5000 (проверено вручную); магний — NOW Magtein; тирозин — NOW 500 мг; цинк — пиколинат 25 мг.
+  // Перед показом заказчику перепроверить на WB.
+  ['Витамин D3 8000 МЕ', 1749, 368, 'cut_d3', '/catalog/po-naznaceniu/dlya-kozhi-i-volos/vitamin-d3-8000-me/', 'на WB'],
+  ['Магний L-треонат 2200 мг', 1775, 717, 'cut_magnij', '/catalog/po-naznaceniu/vynoslivost-i-energiya/magnij-l-treonat-2200-mg-dla-mozga-pamati/', 'на WB'],
+  ['L-тирозин 1575 мг', 1764, 445, 'cut_tirozin', '/catalog/po-naznaceniu/pohudenie/tirozin-1575-mg-l-tyrosine/', 'на WB'],
+  ['Цинк пиколинат 25 мг', 710, 298, 'cut_zinc', '/catalog/po-naznaceniu/obshcheukreplyayushchee/cink-pikolinat-125-mg-vitaminy-zink/', 'на WB'],
+  ['Коэнзим Q10 100 мг', 906, 594, 'cut_q10', '/catalog/po-naznaceniu/dlya-serdca-i-sosudov/koenzim-q10-100-mg/', 'на сайте'],
 ];
 const IMG = { zinc: 'cut_zinc', d3k2: 'cut_d3k2', d3: 'cut_d3', magnij: 'cut_magnij', q10: 'cut_q10', kurkumin: 'cut_kurkumin', tirozin: 'cut_tirozin' };
 
@@ -322,9 +324,9 @@ $('ratio').textContent = market > club && club ? '−' + Math.round((1 - club / 
 if (user && user.id) $('cardno').textContent = 'MRZ ' + String(user.id).padStart(8, '0').slice(-8).replace(/(\d{4})(\d{4})/, '$1 $2');
 
 // Список клубных цен
-$('list').innerHTML = CATALOG.map(([name, reg, cl, img, path]) =>
+$('list').innerHTML = CATALOG.map(([name, reg, cl, img, path, src]) =>
   `<a class="item" href="${SITE + path}" data-ext>${img ? `<img src="img/${img}.webp" alt="" loading="lazy">` : '<div class="ph">MRZ</div>'}` +
-  `<b>${name.replace(/ (\S+)$/, '\u00a0$1').replace(/(\S*-\S*)/g, '<span class="nw">$1</span>')}<span class="go">Смотреть на сайте →</span></b><div class="pr"><s>${rub(reg)}</s><div>${rub(cl)}</div></div></a>`).join('');
+  `<b>${name.replace(/ (\S+)$/, '\u00a0$1').replace(/(\S*-\S*)/g, '<span class="nw">$1</span>')}<span class="go">Смотреть на сайте →</span></b><div class="pr"><s>${rub(reg)}</s><em class="src">${src}</em><div>${rub(cl)}</div></div></a>`).join('');
 
 // Калькулятор
 const diff = Math.max(market - club, 0);
