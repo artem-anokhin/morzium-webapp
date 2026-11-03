@@ -222,14 +222,14 @@ const DEF = {
 // Каталог morzium.com: обычная цена → клубная (03.11.2026)
 const CATALOG = [
   ['Витамин D3 8000 МЕ', 561, 368, 'cut_d3'],
-  ['Витамин D3 5000 МЕ + K2', 458, 301, ''],
-  ['Цинк пиколинат 25 мг', 455, 298, ''],
+  ['Витамин D3 5000 МЕ + K2', 458, 301, 'cut_d3k2'],
+  ['Цинк пиколинат 25 мг', 455, 298, 'cut_zinc'],
   ['L-тирозин 1575 мг', 678, 445, 'cut_tirozin'],
   ['Куркумин 150 мг', 801, 525, 'cut_kurkumin'],
   ['Коэнзим Q10 100 мг', 906, 594, 'cut_q10'],
   ['Магний L-треонат 2200 мг', 1093, 717, 'cut_magnij'],
 ];
-const IMG = { d3: 'cut_d3', magnij: 'cut_magnij', q10: 'cut_q10', kurkumin: 'cut_kurkumin', tirozin: 'cut_tirozin' };
+const IMG = { zinc: 'cut_zinc', d3k2: 'cut_d3k2', d3: 'cut_d3', magnij: 'cut_magnij', q10: 'cut_q10', kurkumin: 'cut_kurkumin', tirozin: 'cut_tirozin' };
 
 const q = new URLSearchParams(location.search);
 const P = k => (q.get(k) || DEF[k] || '').trim();
@@ -237,7 +237,7 @@ const $ = id => document.getElementById(id);
 const safe = u => /^https:\/\//.test(u) ? u : null;
 const num = s => parseInt(String(s).replace(/\D/g, '')) || 0;
 const rub = v => v.toLocaleString('ru-RU') + ' ₽';
-const priceOrSite = s => /\d/.test(s) ? s + ' ₽' : 'на сайте';
+const priceOrEmpty = s => /\d/.test(s) ? s + ' ₽' : '';
 
 const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initData ? Telegram.WebApp : null;
 const user = tg && tg.initDataUnsafe && tg.initDataUnsafe.user;
@@ -251,7 +251,7 @@ const market = num(P('m')), club = num(P('c'));
 $('ratio').textContent = market > club && club ? '−' + Math.round((1 - club / market) * 100) + '%' : '';
 
 // Тарифы
-$('pm').textContent = priceOrSite(P('pm')); $('py').textContent = priceOrSite(P('py'));
+['pm', 'py'].forEach(id => { const t = priceOrEmpty(P(id)); $(id).textContent = t; $(id).hidden = !t; });
 if (user && user.id) $('cardno').textContent = 'MRZ ' + String(user.id).padStart(8, '0').slice(-8).replace(/(\d{4})(\d{4})/, '$1 $2');
 
 // Список клубных цен
