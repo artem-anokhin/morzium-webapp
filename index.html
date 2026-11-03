@@ -7,7 +7,7 @@
 <meta name="description" content="Закрытый клуб MORZIUM: БАДы почти по себестоимости. Витамин D3 за 368 ₽ вместо 1 749 ₽.">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#fff;--gray:#f2f3f5;--gray2:#e9ebee;--ink:#0d0d0f;--muted:#5f6268;--line:#e4e5e8;--blue:#1565d8;--blue2:#0f4fb0;--blue-l:#e8f0fc;--red:#e2483c;--green:#1f9d55;--r:24px;
 --sh1:0 1px 2px rgba(13,13,15,.04),0 4px 14px -6px rgba(13,13,15,.10);
@@ -173,6 +173,53 @@ footer svg{width:18px;height:18px;fill:none;stroke:var(--blue);stroke-width:2;st
 @media (max-width:380px){.hero .bottle{width:50%;right:-26px}.hero .txt{max-width:62%}.item{gap:10px;grid-template-columns:46px 1fr auto}.item img{width:46px;height:46px}}
 @media (max-width:350px){.hero .new{font-size:58px}.hero .txt{max-width:64%}.res b{font-size:18px}}
 @media (prefers-reduced-motion:reduce){.reveal,.js .reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* ===== Стиль сайта morzium.com: плоско, без свечений, градиентов и теней ===== */
+body{font-family:Nunito,system-ui,sans-serif;font-weight:500}
+h1,h2,.hero .new,.hero .old,.item .pr div,.res b,.plan b,.plan .p,.btn,.pill,summary,.perk b,.more,.chip,.bar,.club,.hero .x,.hero .tag{font-family:Montserrat,system-ui,sans-serif}
+h1,h2{font-weight:800;letter-spacing:-.01em}
+.card{border-radius:20px;padding:24px 20px}
+.card>.lbl{display:none}
+.hero .lbl{display:block;color:#9aa0a8;letter-spacing:.08em}
+.hero .lbl:before{display:none}
+.blue{background:var(--blue)}
+.hero{background:#111;box-shadow:none}
+.hero:after,.hero .glow{display:none}
+.hero .old:after{transform:none;box-shadow:none;height:2.5px}
+.hero .tag,.hero .x,.pill,.chip,.bar,.item,.res div,.res div:first-child,.perk,details,details[open],.plan,.plan.on,.plan .badge,.btn,.btn:active,.club{box-shadow:none}
+.hero .bottle{filter:drop-shadow(0 12px 18px rgba(0,0,0,.45))}
+.js .hero .new,.js .hero .bottle,.js .hero .x,.js .club:after,.js details[open] p{animation:none}
+.js .reveal{opacity:1;transform:none;transition:none}
+.pill{border-radius:10px;background:var(--blue)}
+.btn{background:var(--blue);border-radius:12px;font-weight:700}
+.btn:active{background:var(--blue2);transform:none}
+.item{border-radius:16px}
+.item img{background:none;padding:0}
+.more{box-shadow:none;border:1px solid #dfe1e5}
+.bar{border-radius:12px}
+.bar .over{background:var(--red);text-shadow:none}
+.chip{border-radius:12px}
+.res div{border-radius:16px}
+/* привилегии как на сайте: один белый блок с разделителями, чёрные иконки-квадраты */
+.perks{gap:0;background:#fff;border-radius:16px;overflow:hidden}
+.perk{border-radius:0;background:none;padding:16px;border-top:1px solid #ececec}
+.perk:first-child{border-top:0}
+.perk i,.perk:first-child i{background:#111;color:#fff;border-radius:10px;width:38px;height:38px}
+.perk i svg{width:20px;height:20px}
+.soon em{border:1px solid #d5d7db;border-radius:999px}
+/* FAQ */
+details{border-radius:14px}
+summary:after{background-color:transparent}
+details[open] summary:after{background-color:transparent}
+/* тарифы */
+#join{background:var(--gray)}
+.club{background:#111;border-radius:16px}
+.club:after,.club .chipc{display:none}
+.club:before{-webkit-text-stroke:1px rgba(255,255,255,.08)}
+.club .t{color:#9aa0a8}
+.plan{border-radius:14px}
+.plan .badge{border-radius:6px}
+.fixed{background:#fff;border-top:1px solid #ececec;padding-top:12px}
 </style>
 </head>
 <body>
@@ -186,7 +233,7 @@ footer svg{width:18px;height:18px;fill:none;stroke:var(--blue);stroke-width:2;st
     <div class="old"><span id="pmarket">1 749</span> ₽</div>
     <div class="new"><span id="pclub">368</span><small> ₽</small></div>
     <div class="tag">И это не акция</div>
-    <p class="sub muted">Цена для участников закрытого клуба MORZIUM. <span id="pml">У известного бренда на WB</span> аналог стоит <span id="pm2">1 749</span> ₽.</p>
+    <p class="sub muted">Цена для участников закрытого клуба MORZIUM. <span id="pml">У известного бренда на WB</span> аналог стоит <span style="white-space:nowrap"><span id="pm2">1 749</span> ₽</span>.</p>
   </div>
   <div class="glow" aria-hidden="true"></div>
   <img class="bottle" id="pimg" src="img/cut_d3.webp" alt="">
@@ -334,7 +381,7 @@ const calc = () => {
   $('save').textContent = '≈ ' + rub(k * diff);
   $('saveY').textContent = '≈ ' + rub(k * diff * 12);
   const v = $('verdict');
-  if (k >= 3) { v.className = 'verdict ok'; v.textContent = '✅ Тебе в клуб: членство окупается уже с 2,5 банок.'; }
+  if (k >= 3) { v.className = 'verdict ok'; v.textContent = 'Тебе в клуб: членство окупается уже с 2,5 банок.'; }
   else { v.className = 'verdict no'; v.textContent = 'Меньше 3 банок в месяц: клуб может не окупиться. Это нормально.'; }
 };
 $('n').oninput = () => { calc(); tg && tg.HapticFeedback.selectionChanged(); };
