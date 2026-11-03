@@ -220,6 +220,13 @@ details[open] summary:after{background-color:transparent}
 .plan{border-radius:14px}
 .plan .badge{border-radius:6px}
 .fixed{background:#fff;border-top:1px solid #ececec;padding-top:12px}
+/* калькулятор: кнопки-цифры вместо ползунка */
+.seg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin:16px 0 4px}
+.seg button{font:700 17px Montserrat,sans-serif;height:48px;border:1px solid #dfe1e5;border-radius:12px;background:#fff;color:var(--ink);cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.seg button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.res b{font-size:clamp(20px,6.4vw,26px)}
+.verdict{border-radius:0;padding:0;margin-top:14px;font-weight:700;font-size:14px;background:none!important}
+.verdict.ok{color:var(--blue)}.verdict.no{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -271,10 +278,10 @@ details[open] summary:after{background-color:transparent}
 <section class="card calc reveal">
   <div class="lbl">Проверка за 10 секунд</div>
   <h2>Сколько банок БАДов ты берёшь в месяц?</h2>
-  <input type="range" id="n" min="1" max="6" value="3" aria-label="Банок в месяц">
-  <div class="ticks"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
+  <input type="hidden" id="n" value="3">
+  <div class="seg" id="seg" role="radiogroup" aria-label="Банок в месяц"></div>
   <div class="res">
-    <div><b id="save">0 ₽</b><span>разница в месяц на <span id="nlbl">3 банках</span></span></div>
+    <div><b id="save">0 ₽</b><span>примерная разница в месяц на <span id="nlbl">3 банках</span></span></div>
     <div><b id="saveY">0 ₽</b><span>за год</span></div>
   </div>
   <div class="verdict ok" id="verdict"></div>
@@ -378,13 +385,15 @@ const calc = () => {
   const k = +$('n').value;
   $('n').style.setProperty('--p', ((k - 1) / 5 * 100) + '%');
   $('nlbl').textContent = k + ' ' + word(k);
-  $('save').textContent = '≈ ' + rub(k * diff);
-  $('saveY').textContent = '≈ ' + rub(k * diff * 12);
+  $('save').textContent = rub(k * diff);
+  $('saveY').textContent = rub(k * diff * 12);
+  document.querySelectorAll('#seg button').forEach(b => { const on = +b.dataset.k === k; b.classList.toggle('on', on); b.setAttribute('aria-checked', on); });
   const v = $('verdict');
   if (k >= 3) { v.className = 'verdict ok'; v.textContent = 'Тебе в клуб: членство окупается уже с 2,5 банок.'; }
   else { v.className = 'verdict no'; v.textContent = 'Меньше 3 банок в месяц: клуб может не окупиться. Это нормально.'; }
 };
-$('n').oninput = () => { calc(); tg && tg.HapticFeedback.selectionChanged(); };
+$('seg').innerHTML = [1, 2, 3, 4, 5, 6].map(k => `<button type="button" role="radio" data-k="${k}">${k}${k === 6 ? '+' : ''}</button>`).join('');
+document.querySelectorAll('#seg button').forEach(b => b.onclick = () => { $('n').value = b.dataset.k; calc(); tg && tg.HapticFeedback.selectionChanged(); });
 calc();
 
 // Ссылки: к оплате добавляем tg_id (для будущего вебхука) и utm
